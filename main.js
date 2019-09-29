@@ -1,21 +1,11 @@
-const readLine = require('readline');
-const fs = require('fs');
+const file = require('./file');
 
-const fileData = [];
-const MATRIX = [];
+const matrix = [];
+const fileData = file(process.argv[2]);
+const lines = fileData.trim().split('\n');
 
-const file = readLine.createInterface({
-  input: fs.createReadStream('labirinto2_10.txt'),
+lines.filter((_, index) => index > 0).forEach((line) => {
+  matrix.push(line.trim().split(' '));
 });
 
-file.on('line', (line) => {
-  fileData.push(line);
-});
-
-file.on('close', () => {
-  fileData.filter((elem, index) => index > 0).forEach((line) => {
-    MATRIX.push(line.trim().split(' '));
-  });
-  console.log('matrix', MATRIX);
-});
-
+console.log(matrix);
