@@ -1,6 +1,5 @@
-module.exports = {
-  size: 0,
-  freeways: 0,
-  matrix: [],
+const matrix = [];
+let freeways = 0;
+let size = 0;
 
-}
+module.exports = { matrix, freeways, size };

@@ -1,20 +1,22 @@
 const file = require('./file');
 const maze = require('./maze');
 
-const fileData = file.data(process.argv[2]);
-const fileLines = file.lines(fileData);
+// Pega nome do arquivo no parâmetro
+file.setName() = process.argv[2];
 
-// Insere o tamanho do labirinto
-maze.size = fileLines[0];
+// Tamanho do labirinto
+maze.size = file.lines[0];
 
-// // Popula matriz com o conteúdo do arquivo .txt (pula a primeira linha)
-fileLines.filter((_, index) => index > 0).forEach((line) => {
+// Popula matriz com o conteúdo do arquivo .txt (pula a primeira linha)
+file.lines.filter((_, index) => index > 0).forEach((line) => {
   maze.matrix.push(line.trim().split(' '));
 });
 
-console.log(maze.matrix);
+// Matriz unidimensional para contar ocorrências
 const flat = (acc, cur) => acc.concat(cur);
 const flatMatrix = maze.matrix.reduce(flat, []);
-const countFreeways = flatMatrix.filter((value) => value === '0').length;
 
-console.log(countFreeways);
+// Número de posições livres
+maze.freeways = flatMatrix.filter((element) => element === '0').length;
+
+file.test();

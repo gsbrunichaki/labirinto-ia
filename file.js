@@ -1,6 +1,21 @@
 const fs = require('fs');
 
-module.exports = {
-  data: (file) => fs.readFileSync(file, 'utf8'),
-  lines: (fileData) => fileData.trim().split('\n'),
+class File {
+  constructor(name) {
+    this.name = name;
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
+  data() {
+    return fs.readFileSync(this.name, 'utf8');
+  }
+
+  lines() {
+    return data().trim().split('\n');
+  }
 }
+
+module.exports = File;
