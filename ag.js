@@ -17,4 +17,4 @@ console.log(maze.getMatrix());
 
 // console.log(chromosome.reward('S'));
 
-console.log(chromosome.move(4, maze.getMatrix()));
+console.log(chromosome.move(8, maze.getMatrix()));

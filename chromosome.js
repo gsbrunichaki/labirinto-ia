@@ -40,10 +40,10 @@ class Chromosome {
       case 2: return this.moveRightUp(x, y, matrix);
       case 3: return this.moveRight(x, y, matrix);
       case 4: return this.moveRightBottom(x, y, matrix);
-      case 5:
-      case 6:
-      case 7:
-      case 8:
+      case 5: return this.moveBottom(x, y, matrix);
+      case 6: return this.moveLeftBottom(x, y, matrix);
+      case 7: return this.moveLeft(x, y, matrix);
+      case 8: return this.moveLeftUp(x, y, matrix);
       default:
         break;
     }
@@ -105,6 +105,64 @@ class Chromosome {
     }
 
     return this.reward(rightBottom);
+  }
+
+  moveBottom(x, y, matrix) {
+    if (x === matrix.length - 1) {
+      return this.reward('1');
+    }
+
+    const bottom = matrix[x + 1][y];
+
+    if (bottom === '0' || bottom === 'S') {
+      this.currPos[0]++;
+    }
+
+    return this.reward(bottom);
+  }
+
+  moveLeftBottom(x, y, matrix) {
+    if (x === matrix.length - 1 || y === 0) {
+      return this.reward('1');
+    }
+
+    const leftBottom = matrix[x + 1][y - 1];
+
+    if (leftBottom === '0' || leftBottom === 'S') {
+      this.currPos[0]++;
+      this.currPos[1]--;
+    }
+
+    return this.reward(leftBottom);
+  }
+
+  moveLeft(x, y, matrix) {
+    if (y === 0) {
+      return this.reward('1');
+    }
+
+    const left = matrix[x][y - 1];
+
+    if (left === '0' || left === 'S' || left === 'E') {
+      this.currPos[1]--;
+    }
+
+    return this.reward(left);
+  }
+
+  moveLeftUp(x, y, matrix) {
+    if (x === 0 || y === 0) {
+      return this.reward('1');
+    }
+
+    const leftUp = matrix[x - 1][y - 1];
+
+    if (leftUp === '0' || leftUp === 'S' || leftUp === 'E') {
+      this.currPos[0]--;
+      this.currPos[1]--;
+    }
+
+    return this.reward(leftUp);
   }
 
 }
