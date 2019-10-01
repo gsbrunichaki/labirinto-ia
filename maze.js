@@ -7,6 +7,10 @@ class Maze {
     this.freeBlocks = this.countFreeBlocks();
   }
 
+  getFreeBlocks() {
+    return this.freeBlocks;
+  }
+
   getMatrix() {
     return this.matrix;
   }
@@ -26,7 +30,7 @@ class Maze {
   }
 
   countFreeBlocks() {
-    this.flatMatrix.filter((pos) => pos === '0').length;
+    return this.flatMatrix.filter((pos) => pos === '0').length;
   }
 
 }
