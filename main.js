@@ -121,72 +121,66 @@ function move(n) {
       return aptidao(direita);
     case 4:
       console.log(n, localAtual, 'direita baixo');
-      if(localAtual[0] === matrix.length - 1) break;
-      if(localAtual[1] === matrix.length - 1) break;
 
-      const destino4 = matrix[localAtual[0] + 1][localAtual[1] + 1];
+      if(localAtual[0] === matrix.length - 1) return aptidao('1');
+      if(localAtual[1] === matrix.length - 1) return aptidao('1');
 
-      if(destino4 === '0'
-      || destino4 === 'S') {
+      const direitaBaixo = matrix[localAtual[0] + 1][localAtual[1] + 1];
+
+      if(direitaBaixo === '0'|| direitaBaixo === 'S') {
         localAtual[0]++;
         localAtual[1]++;
       }
       
-      return aptidao(destino4);
+      return aptidao(direitaBaixo);
     case 5:
       console.log(n, localAtual, 'baixo');
-      if(localAtual[0] === matrix.length - 1) break;
+      if(localAtual[0] === matrix.length - 1) return aptidao('1');
 
-      const destino5 = matrix[localAtual[0] + 1][localAtual[1]];
+      const baixo = matrix[localAtual[0] + 1][localAtual[1]];
 
-      if(destino5 === '0'
-      || destino5 === 'S') {
+      if(baixo === '0'|| baixo === 'S') {
         localAtual[0]++;
       }
 
-      return aptidao(destino5);
+      return aptidao(baixo);
     case 6:
       console.log(n, localAtual, 'esquerda baixo');
-      if(localAtual[0] === matrix.length - 1) break;
-      if(localAtual[1] === 0) break;
+      if(localAtual[0] === matrix.length - 1) return aptidao('1');
+      if(localAtual[1] === 0) return aptidao('1');
 
-      const destino6 = matrix[localAtual[0] + 1][localAtual[1] - 1];
+      const esquerdaBaixo = matrix[localAtual[0] + 1][localAtual[1] - 1];
 
-      if(destino6 === '0'
-      || destino6 === 'S') {
+      if(esquerdaBaixo === '0'|| esquerdaBaixo === 'S') {
         localAtual[0]++;
         localAtual[1]--;
       }
 
-      return aptidao(destino6);
+      return aptidao(esquerdaBaixo);
     case 7:
       console.log(n, localAtual, 'esquerda');
-      if(localAtual[1] === 0) break;
+      if(localAtual[1] === 0) return aptidao('1');
 
-      const destino7 = matrix[localAtual[0]][localAtual[1] - 1];
+      const esquerda = matrix[localAtual[0]][localAtual[1] - 1];
 
-      if(destino7 === '0'
-      || destino7 === 'S'
-      || destino7 === 'E') {
+      if(esquerda === '0'|| esquerda === 'S'|| esquerda === 'E') {
         localAtual[1]--;
       }
 
-      return aptidao(destino7);
+      return aptidao(esquerda);
     case 8:
       console.log(n, localAtual, 'esquerda cima');
-      if(localAtual[0] === 0) break;
-      if(localAtual[1] === 0) break;
+      if(localAtual[0] === 0) return aptidao('1');
+      if(localAtual[1] === 0) return aptidao('1');
 
-      const destino8 = matrix[localAtual[0] - 1][localAtual[1] - 1];
+      const esquerdaCima = matrix[localAtual[0] - 1][localAtual[1] - 1];
 
-      if(destino8 === '0'
-      || destino8 === 'S'
-      || destino8 === 'E') {
+      if(esquerdaCima === '0'|| esquerdaCima === 'S'|| esquerdaCima === 'E') {
         localAtual[0]--;
         localAtual[1]--;
       }
 
-      return aptidao(destino8);
+      return aptidao(esquerdaCima);
     default:
       console.log(n, 'ERRO!!!');
       break;
@@ -196,7 +190,9 @@ function move(n) {
 let aptidaoTotal = 0;
 
 for (let i = 0; i < populacao[0].length; i++) {
-  aptidaoTotal += move(populacao[0][i]);
+  const m = move(populacao[0][i])
+  console.log('++++', m);
+  console.log('soma', aptidaoTotal += m);
 }
 
 console.log(aptidaoTotal);
