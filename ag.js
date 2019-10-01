@@ -10,9 +10,11 @@ const population = 30;
 
 // console.log('size', maze.getSize());
 // console.log('freeBlocks', maze.getFreeBlocks());
-// console.log(maze.getMatrix());
+console.log(maze.getMatrix());
 
 // console.log(chromosome.getGenes());
 // console.log(chromosome.getGenesLength());
 
 // console.log(chromosome.reward('S'));
+
+console.log(chromosome.move(4, maze.getMatrix()));
