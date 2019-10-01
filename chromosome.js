@@ -6,6 +6,15 @@ class Chromosome {
     this.genesLength = genesLength;
     this.genes = this.generateGenes();
     this.currPos = [0, 0];
+    this.fitness = 0;
+  }
+
+  accFitness(value) {
+    this.fitness += value;
+  }
+
+  getFitness() {
+    return this.fitness;
   }
 
   getGenes() {
