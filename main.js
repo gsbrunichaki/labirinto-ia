@@ -203,19 +203,25 @@ for (let i = 0; i < populacao.length; i++) {
 
 function elitismo(populacao){
   tamanho = populacao[1].length;
-  const elite = populacao[0][tamanho];
-  const linhaElite = 0;
+  const braba = populacao[0][tamanho];
+  const linhaBraba = 0;
   for (let i = 0; i < populacao.length; i++) {
-    if(populacao[i][tamanho]<elite){
-      elite = populacao[i][tamanho];
-      linhaElite = i;
+    if(populacao[i][tamanho]<braba){
+      braba = populacao[i][tamanho];
+      linhaBraba = i;
     }
     for(let j=0;j<tamanho;j++) {
-      populacao[0][j] = matrizA[linhaElite][j];
+      populacao[0][j] = matrizA[linhaBraba][j];
     }
-    console.log('alo'+linhaElite);
+    console.log('alo'+linhaBraba);
   }
+}
 
+function torneio(populacao){
+  let primeira = populacao[0].Math.random() * (populacao[0].length - 1) + 1;
+  let segunda = populacao[0].Math.random() * (populacao[0].length - 1) + 1;
+
+  return(primeira + segunda)
 }
 
 
