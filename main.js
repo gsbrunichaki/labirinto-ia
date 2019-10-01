@@ -187,12 +187,42 @@ function move(n) {
   }
 }
 
-let aptidaoTotal = 0;
 
-for (let i = 0; i < populacao[0].length; i++) {
-  const m = move(populacao[0][i])
-  console.log('++++', m);
-  console.log('soma', aptidaoTotal += m);
+console.log(populacao[0].length)
+
+
+for (let i = 0; i < populacao.length; i++) {
+  let aptidaoTotal = 0;
+  for (let j = 0; j < populacao[0].length - 1; j++) {
+    aptidaoTotal += move(populacao[i][j])
+  }
+  
+  console.log(aptidaoTotal);
+  populacao[i].push(aptidaoTotal);
 }
 
-console.log(aptidaoTotal);
+function elitismo(populacao){
+  tamanho = populacao[1].length;
+  const elite = populacao[0][tamanho];
+  const linhaElite = 0;
+  for (let i = 0; i < populacao.length; i++) {
+    if(populacao[i][tamanho]<elite){
+      elite = populacao[i][tamanho];
+      linhaElite = i;
+    }
+    for(let j=0;j<tamanho;j++) {
+      populacao[0][j] = matrizA[linhaElite][j];
+    }
+    console.log('alo'+linhaElite);
+  }
+
+}
+
+
+// for (let i = 0; i < populacao[0].length; i++) {
+//   const m = move(populacao[0][i])
+//   console.log('++++', m);
+//   console.log('soma', aptidaoTotal += m);
+// }
+
+// console.log(populacao);
