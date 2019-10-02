@@ -5,111 +5,129 @@ const randomBetween = require('./random');
 
 const file = new File('tests/labirinto1_10.txt');
 const maze = new Maze(file.content());
-const chromosome = new Chromosome(maze.getFreeBlocks());
 
 class AG {
-  constructor(population) {
+  constructor(generations, population, genes) {
+    this.generations = generations;
     this.population = population;
-    this.chromosomes = [];
+    this.genes = genes;
+    this.chromosomes = this.generateChromosomes(population);
+    this.elite = null;
+    this.intermerdiateMatrix = [];
   }
-}
 
-const population = 30;
-const chromosomes = [];
+  generateChromosomes(population) {
+    const chromosomes = [];
 
-// console.log('size', maze.getSize());
-// console.log('freeBlocks', maze.getFreeBlocks());
-console.log(maze.getMatrix());
-
-// console.log(chromosome.getGenes());
-// console.log(chromosome.getGenesLength());
-
-// console.log(chromosome.reward('S'));
-
-console.log(chromosome.move(5, maze.getMatrix()));
-
-function generatePopulation(popAmount) {
-  for (let i = 0; i < popAmount; i++) {
-    const newChromosome = new Chromosome(maze.getFreeBlocks());
-
-    for (let j = 0; j < maze.getFreeBlocks(); j++) {
-      const direction = newChromosome.getGenes()[j];
-      const score = newChromosome.move(direction, maze.getMatrix());
-      
-      newChromosome.accFitness(score);
+    for (let i = 0; i < population; i++) {
+      const newChromosome = new Chromosome(this.genes);
+      chromosomes.push(newChromosome);
     }
 
-    chromosomes.push(newChromosome);
-  }
-}
-
-generatePopulation(population);
-
-// console.log(chromosomes);
-
-function elitism(chromosomes) {
-  const compare = (a, b) => {
-    if (a.getFitness() > b.getFitness()) return 1;
-    if (a.getFitness() < b.getFitness()) return -1;
-
-    return 0;
+    return chromosomes;
   }
 
-  const sortByFitnessDesc = chromosomes.sort(compare).reverse();
-  const elite = sortByFitnessDesc[0];
-  // console.log(elite);
-}
+  calcFitness(chromosome) {
+    for (let j = 0; j < this.genes; j++) {
+      const direction = chromosome.getGenes()[j];
+      const score = chromosome.move(direction, maze.getMatrix());
+      
+      chromosome.accFitness(score);
+    }
+  }
 
-elitism(chromosomes);
+  elitism() {
+    const compare = (a, b) => {
+      if (a.getFitness() > b.getFitness()) {
+        return 1;
+      }
+      
+      if (a.getFitness() < b.getFitness()) {
+        return -1;
+      }
 
-function tournament(chromosomes) {
-  const first = chromosomes[randomBetween(0, 29)];
-  const second = chromosomes[randomBetween(0, 29)];
-
-  // console.log('first', first.getFitness());
-  // console.log('second', second.getFitness());
-
-  if (first.getFitness() >= second.getFitness()) return first;
-
-  return second;
-}
-
-tournament(chromosomes);
-
-function crossover(chromosomes, population) {
-  const intermerdiateMatrix = [];
+      return 0;
+    }
   
-  for (let i = 0; i < population / 2; i++) {
-    const cut = maze.getFreeBlocks() / 2;
+    const sortByFitnessDesc = this.chromosomes.sort(compare).reverse();
+    const elite = sortByFitnessDesc[0];
 
-    // TODO: while mother === father
-    const mother = tournament(chromosomes);
-    const father = tournament(chromosomes);
+    let currentFitness = 0;
 
-    const motherGenes = [...mother.getGenes()];
-    const fatherGenes = [...father.getGenes()];
+    if (this.elite) {
+      currentFitness = this.elite.getFitness();
+    }
 
-    const halfMother = motherGenes.splice(0, cut);
-    const halfFather = fatherGenes.splice(0, cut);
-    
-    const son1 = [...halfMother, ...fatherGenes];
-    const son2 = [...halfFather, ...motherGenes];
-
-    intermerdiateMatrix.push(son1);
-    intermerdiateMatrix.push(son2);    
+    if (currentFitness < elite.getFitness()) {
+      console.log('É MELHORR')
+      this.elite = elite;
+    }
   }
 
-  return intermerdiateMatrix;
+  tournament() {
+    const first = this.chromosomes[randomBetween(0, 29)];
+    const second = this.chromosomes[randomBetween(0, 29)];
+  
+    if (first.getFitness() >= second.getFitness()) {
+      return first;
+    }
+
+    return second;
+  }
+
+  crossover() {
+    const sons = [];
+    
+    for (let i = 0; i < this.population / 2; i++) {
+      const cut = maze.getFreeBlocks() / 2;
+  
+      // TODO: while mother === father
+      const mother = this.tournament();
+      const father = this.tournament();
+  
+      const motherGenes = [...mother.getGenes()];
+      const fatherGenes = [...father.getGenes()];
+  
+      const halfMother = motherGenes.splice(0, cut);
+      const halfFather = fatherGenes.splice(0, cut);
+
+      const son1 = new Chromosome(this.genes);
+      const son2 = new Chromosome(this.genes);
+      
+      son1.setGenes([...halfMother, ...fatherGenes]);
+      son2.setGenes([...halfFather, ...motherGenes]);
+  
+      sons.push(son1);
+      sons.push(son2);    
+    }
+  
+    this.intermerdiateMatrix = sons;
+  }
+
+  mutation() {
+    const randomChromosome = randomBetween(0, 29);
+    const randomGene = randomBetween(1, 8);
+    const randomNewGene = randomBetween(1, 8);
+  
+    this.intermerdiateMatrix[randomChromosome].getGenes()[randomGene] = randomNewGene;  
+  }
+
+  evolve() {
+    for (let i = 0; i <= this.generations; i++) {
+      for (let j = 0; j < this.population; j++) {
+        this.calcFitness(this.chromosomes[j]);
+      }
+
+      this.elitism();
+      this.crossover();
+      this.mutation();
+      
+      this.chromosomes = this.intermerdiateMatrix;
+      this.intermerdiateMatrix = [];
+
+      console.log(this.elite.getFitness());
+    }
+  }
 }
 
-const intermerdiateMatrix = crossover(chromosomes, population);
-
-console.log('oaskdoakd', alo.length);
-
-function mutation() {
-  const randomChromosome = randomBetween(0, 29);
-  const randomGene = randomBetween(1, 8);
-  const randomNewGene = randomBetween(1, 8);
-
-  intermerdiateMatrix[randomChromosome].getGenes()[randomGene] = randomNewGene;  
-}
+module.exports = AG;

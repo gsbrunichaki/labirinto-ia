@@ -21,6 +21,10 @@ class Chromosome {
     return this.genes;
   }
 
+  setGenes(genes) {
+    this.genes = genes;
+  }
+
   getGenesLength() {
     return this.genesLength;
   }
