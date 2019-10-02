@@ -6,7 +6,17 @@ class Chromosome {
     this.genesLength = genesLength;
     this.genes = this.generateGenes();
     this.currPos = [0, 0];
+    this.path = [];
     this.fitness = 0;
+    this.foundExit = false;
+  }
+
+  getPath() {
+    return this.path;
+  }
+
+  getFoundExit() {
+    return this.foundExit;
   }
 
   accFitness(value) {
@@ -23,6 +33,10 @@ class Chromosome {
 
   setGenes(genes) {
     this.genes = genes;
+  }
+
+  getCurrPos() {
+    return this.currPos;
   }
 
   getGenesLength() {
@@ -70,8 +84,11 @@ class Chromosome {
     const up = matrix[x - 1][y];
 
     if (up === '0' || up === 'E' || up === 'S') {
+      this.foundExit = up === 'S';
       this.currPos[0]--;
     }
+
+    this.path.push([x - 1, y]);
 
     return this.reward(up);
   }
@@ -84,9 +101,12 @@ class Chromosome {
     const rightUp = matrix[x - 1][y + 1];
 
     if (rightUp === '0' || rightUp === 'S') {
+      this.foundExit = rightUp === 'S';
       this.currPos[0]--;
       this.currPos[1]++;
     }
+
+    this.path.push([x - 1, y + 1]);
 
     return this.reward(rightUp);
   }
@@ -99,8 +119,11 @@ class Chromosome {
     const right = matrix[x][y + 1];
 
     if (right === '0' || right === 'S') {
+      this.foundExit = right === 'S';
       this.currPos[1]++;
     }
+
+    this.path.push([x, y + 1]);
 
     return this.reward(right);
   }
@@ -113,9 +136,12 @@ class Chromosome {
     const rightBottom = matrix[x + 1][y + 1];
 
     if (rightBottom === '0' || rightBottom === 'S') {
+      this.foundExit = rightBottom === 'S';
       this.currPos[0]++;
       this.currPos[1]++;
     }
+
+    this.path.push([x + 1, y + 1]);
 
     return this.reward(rightBottom);
   }
@@ -128,8 +154,11 @@ class Chromosome {
     const bottom = matrix[x + 1][y];
 
     if (bottom === '0' || bottom === 'S') {
+      this.foundExit = bottom === 'S';
       this.currPos[0]++;
     }
+
+    this.path.push([x + 1, y]);
 
     return this.reward(bottom);
   }
@@ -142,9 +171,12 @@ class Chromosome {
     const leftBottom = matrix[x + 1][y - 1];
 
     if (leftBottom === '0' || leftBottom === 'S') {
+      this.foundExit = leftBottom === 'S';
       this.currPos[0]++;
       this.currPos[1]--;
     }
+
+    this.path.push([x + 1, y - 1]);
 
     return this.reward(leftBottom);
   }
@@ -157,8 +189,11 @@ class Chromosome {
     const left = matrix[x][y - 1];
 
     if (left === '0' || left === 'S' || left === 'E') {
+      this.foundExit = left === 'S';
       this.currPos[1]--;
     }
+
+    this.path.push([x, y - 1]);
 
     return this.reward(left);
   }
@@ -171,9 +206,12 @@ class Chromosome {
     const leftUp = matrix[x - 1][y - 1];
 
     if (leftUp === '0' || leftUp === 'S' || leftUp === 'E') {
+      this.foundExit = leftUp === 'S';
       this.currPos[0]--;
       this.currPos[1]--;
     }
+
+    this.path.push([x - 1, y - 1]);
 
     return this.reward(leftUp);
   }

@@ -14,6 +14,7 @@ class AG {
     this.chromosomes = this.generateChromosomes(population);
     this.elite = null;
     this.intermerdiateMatrix = [];
+    this.sortedMatrix = [];
   }
 
   generateChromosomes(population) {
@@ -29,9 +30,12 @@ class AG {
 
   calcFitness(chromosome) {
     for (let j = 0; j < this.genes; j++) {
+      if (chromosome.getFoundExit()) {
+        return;
+      }
+
       const direction = chromosome.getGenes()[j];
       const score = chromosome.move(direction, maze.getMatrix());
-      
       chromosome.accFitness(score);
     }
   }
@@ -49,8 +53,8 @@ class AG {
       return 0;
     }
   
-    const sortByFitnessDesc = this.chromosomes.sort(compare).reverse();
-    const elite = sortByFitnessDesc[0];
+    this.sortedMatrix = this.chromosomes.sort(compare).reverse();
+    const elite = this.sortedMatrix[0];
 
     let currentFitness = 0;
 
@@ -59,14 +63,13 @@ class AG {
     }
 
     if (currentFitness < elite.getFitness()) {
-      console.log('É MELHORR')
       this.elite = elite;
     }
   }
 
   tournament() {
-    const first = this.chromosomes[randomBetween(0, 29)];
-    const second = this.chromosomes[randomBetween(0, 29)];
+    const first = this.chromosomes[randomBetween(0, this.population - 1)];
+    const second = this.chromosomes[randomBetween(0, this.population - 1)];
   
     if (first.getFitness() >= second.getFitness()) {
       return first;
@@ -105,7 +108,7 @@ class AG {
   }
 
   mutation() {
-    const randomChromosome = randomBetween(0, 29);
+    const randomChromosome = randomBetween(0, this.population - 1);
     const randomGene = randomBetween(1, 8);
     const randomNewGene = randomBetween(1, 8);
   
@@ -114,18 +117,45 @@ class AG {
 
   evolve() {
     for (let i = 0; i <= this.generations; i++) {
+      console.log('');
+      console.log('########### GENERATION ' + i + ' ###########');
+      console.log('');
+
       for (let j = 0; j < this.population; j++) {
         this.calcFitness(this.chromosomes[j]);
       }
 
       this.elitism();
+
+      for (let i = 0; i < this.population; i++) {
+        let chromosome = '';
+
+        for (let j = 0; j < this.genes; j++) {
+          chromosome = chromosome + this.sortedMatrix[i].getGenes()[j] + ', ';
+        }
+
+        console.log('(' + i + ') ', chromosome, 'fitness: ' + this.sortedMatrix[i].getFitness());
+      }
+
       this.crossover();
       this.mutation();
       
       this.chromosomes = this.intermerdiateMatrix;
       this.intermerdiateMatrix = [];
 
-      console.log(this.elite.getFitness());
+      let genesElite = '';
+
+      for (let i = 0; i < this.genes; i++) {
+        genesElite = genesElite + this.elite.getGenes()[i] + ', ';
+      }
+
+      console.log('');
+      console.log('(EL): ', genesElite, this.elite.getFitness());
+      console.log(this.elite.getPath());
+
+      if (this.elite.getFitness() > 5000) {
+        return;
+      }
     }
   }
 }
